@@ -1,11 +1,13 @@
 import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
 
-console.log('Super basic nodeJS project');
+const app = express();
 
-/* 
- * accessing secret 
- * need to have MY_SECRET variable inside .env
-*/
-if (process.env.MY_SECRET) {
-  console.log(process.env.MY_SECRET);
-}
+app.use(cors());
+
+app.listen(process.env.PORT);
+
+app.get('/', (req, res) => {
+  res.send('hello root!');
+});

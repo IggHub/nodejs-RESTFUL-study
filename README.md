@@ -1,4 +1,4 @@
-# NodeJS SUPER-BASIC starter
+# NodeJS BASIC starter
 
 Includes:
 - [@babel/core](https://www.npmjs.com/package/@babel/core) for babel compiler
@@ -6,5 +6,6 @@ Includes:
 - [@babel/present-env](https://babeljs.io/docs/en/babel-preset-env) for latest JS
 - [nodemon](https://nodemon.io/) for automatic reload
 - [dotenv](https://www.npmjs.com/package/dotenv) for secrets
+- [cors](https://www.npmjs.com/package/cors) to enable [cors](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 
-To start, `npm install`, then `npm run start:watch`
+To start, `npm install`, then `npm run start`
