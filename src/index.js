@@ -6,8 +6,19 @@ const app = express();
 
 app.use(cors());
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT, () => {
+  console.log(`app is listening at port ${process.env.PORT}`);
+});
 
-app.get('/', (req, res) => {
-  res.send('hello root!');
+app.get('/users', (req, res) => {
+  res.send('GET users!');
+});
+app.post('/users', (req, res) => {
+  res.send('POST users!');
+});
+app.put('/users', (req, res) => {
+  res.send('PUT users!');
+});
+app.delete('/users', (req, res) => {
+  res.send('DELETE users!');
 });
