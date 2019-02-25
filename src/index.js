@@ -2,9 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import models from './models';
 import routes from './routes';
-import {sequelize}, models from 'sequelize';
+import models, { sequelize } from './models';
 
 const app = express();
 
@@ -24,7 +23,7 @@ app.use('/session', routes.session);
 app.use('/users', routes.user);
 app.use('/messages', routes.message);
 
-const eraseDatabaseSync = true;
+const eraseDatabaseOnSync = true;
 
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   app.listen(process.env.PORT, () =>
