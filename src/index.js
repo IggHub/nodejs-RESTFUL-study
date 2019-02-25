@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import models from './models';
 import routes from './routes';
+import {sequelize}, models from 'sequelize';
 
 const app = express();
 
@@ -18,10 +19,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`app is listening at port ${process.env.PORT}`);
-});
 
 app.use('/session', routes.session);
 app.use('/users', routes.user);
 app.use('/messages', routes.message);
+
+const eraseDatabaseSync = true;
+
+sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+  app.listen(process.env.PORT, () =>
+    console.log(`Example app listening on port ${process.env.PORT}!`),
+  );
+});
