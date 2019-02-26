@@ -6,57 +6,66 @@ const router = Router();
 /*
  * curl http://localhost:3000/messages
 */
-router.get('/', (req, res) => {
-  return res.send(Object.values(req.context.models.messages));
+router.get('/', async (req, res) => {
+  const messages = await req.context.models.Message.findAll();
+  return res.send(messages);
 })
 
 /*
  * curl http://localhost:3000/messages/1
 */
-router.get('/:messageId', (req, res) => {
-  return res.send(req.context.models.messages[req.params.messageId])
+router.get('/:messageId', async (req, res) => {
+  const message = await req.context.models.Message.findById(req.params.messageId);
+  return res.send(message);
 }) 
 
 /*
  * curl -X POST -H "Content-Type:application/json" http://localhost:3000/messages -d '{"text": "Updated text"}'
 */
-router.post('/', (req, res) => {
-  const id = uuidv4();
-  console.log('req body:', req.body);
-  const message = {
-    id,
+router.post('/', async (req, res) => {
+  const message = req.context.models.Message.create({
     text: req.body.text,
     userId: req.context.me.id
-  };
-
-  req.context.models.messages[id] = message;
+  })
 
   return res.send(message);
 });
 
 /*
- * curl -X PUT -H "Content-Type:application/json" http://localhost:3000/messages/1 -d '{"id": 1, "text": "Content updated!", "userId": 1}'
+ * curl -X PUT -H "Content-Type:application/json" http://localhost:3000/messages/1 -d '{"text": "Content updated!"}'
 */
-router.put('/:messageId', (req, res) => {
+router.put('/:messageId', async (req, res) => {
   const messageId = req.params.messageId;
-  if(req.context.models.messages[messageId]) {
-    req.context.models.messages[messageId] = req.body
-  };
-
-  return res.send(req.context.models.messages)
+  try {
+    const result = await req.context.models.Message.update({
+      text: req.body.text
+    },
+    {
+      where: {
+        id: messageId
+      }
+    })
+    return res.send('updated!')
+    } catch(err) {
+      console.log('error: ', err);
+      return res.status(500).send(err);
+    }
 });
 
 /* 
  * curl -X DELETE http://localhost:3000/messages/1
 */
-router.delete('/:messageId', (req, res) => {
-  const {
-    [req.params.messageId]: message,
-    ...otherMessages
-  } = req.context.models.messages;
+router.delete('/:messageId', async (req, res) => {
+  try {
+    const result = await req.context.models.Message.destroy({
+      where: { id: req.params.messageId },
+    });
 
-  req.context.models.messages = otherMessages;
-  return res.send(message)
+    return res.send(true);
+    } catch(errr) {
+      console.log('err: ', err);
+      return res.status(500).send(err);
+    }
 });
 
 export default router;

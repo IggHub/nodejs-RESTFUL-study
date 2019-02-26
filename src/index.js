@@ -10,10 +10,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-app.use((req, res, next) => {
+
+app.use(async (req, res, next) => {
   req.context = {
     models,
-    me: models.users[1]
+    me: await models.User.findByLogin('rwieruch')
   }
   next();
 });
